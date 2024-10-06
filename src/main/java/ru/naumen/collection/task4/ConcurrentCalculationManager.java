@@ -1,25 +1,28 @@
 package ru.naumen.collection.task4;
 
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.ExecutionException;
 import java.util.function.Supplier;
 
-/**
- * Класс управления расчётами
- */
 public class ConcurrentCalculationManager<T> {
 
-    /**
-     * Добавить задачу на параллельное вычисление
-     */
+    private final ConcurrentLinkedQueue<CompletableFuture<T>> futures = new ConcurrentLinkedQueue<>();
+
     public void addTask(Supplier<T> task) {
-        // TODO реализовать
+        CompletableFuture<T> future = CompletableFuture.supplyAsync(task);
+        futures.offer(future);
     }
 
-    /**
-     * Получить результат вычисления.
-     * Возвращает результаты в том порядке, в котором добавлялись задачи.
-     */
     public T getResult() {
-        // TODO реализовать
+        while (!futures.isEmpty()) {
+            CompletableFuture<T> future = futures.poll();
+            try {
+                return future.get();
+            } catch (InterruptedException | ExecutionException e) {
+                throw new RuntimeException(e);
+            }
+        }
         return null;
     }
 }
