@@ -1,10 +1,7 @@
 package ru.naumen.collection.task3;
 
 import java.nio.file.Path;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * <p>Написать консольное приложение, которое принимает на вход произвольный текстовый файл в формате txt.
@@ -23,7 +20,7 @@ public class WarAndPeace
             "Лев_Толстой_Война_и_мир_Том_1,_2,_3,_4_(UTF-8).txt");
 
     public static void main(String[] args) {
-        Map<String, Integer> wordCountMap = new HashMap<>();
+        Map<String, Integer> wordCountMap = new LinkedHashMap<>();
         new WordParser(WAR_AND_PEACE_FILE_PATH)
                 .forEachWord(word -> {
                     wordCountMap.put(word, wordCountMap.getOrDefault(word, 0) + 1);
